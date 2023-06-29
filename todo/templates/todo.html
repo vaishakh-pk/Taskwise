@@ -1,0 +1,92 @@
+{% load static %}
+
+{% block head %}
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta http-equiv="x-ua-compatible" content="ie=edge"/>
+    <title>TaskWise</title>
+    <!-- MDB icon -->
+    <link rel="icon" href="img/mdb-favicon.ico" type="image/x-icon"/>
+    <!-- Font Awesome -->
+    {#    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"/>#}
+    <!-- Google Fonts Roboto -->
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap"/>
+    <!-- MDB -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap-to-do-list.min.css' %}"/>
+    {#--    CUSTOM  --#}
+    <style>
+        .card-body {
+            overflow-y: auto;
+        }
+
+        .gradient-background {
+            background: linear-gradient(45deg, #8c72b8, #ff9d6c);
+        }
+    </style>
+{% endblock head %}
+
+{% block body %}
+    <!-- Start your project here-->
+    <section class="vh-100" style="background: linear-gradient(to right, #fd8c76, #fa7896);">
+        <div class="container py-5 h-100">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-md-12 col-xl-10">
+
+                    <div class="card" style="background: linear-gradient(to right, #fcb0a2, #ff9baf);">
+                        <div class="card-header p-3">
+                            <h5 class="mb-0"><i class="fas fa-tasks me-2"></i>TaskWise</h5>
+                        </div>
+                        <div class="card-body" data-mdb-perfect-scrollbar="true"
+                             style="position: relative; height: 400px">
+
+                            <form>
+                                <div class="form-row">
+                                    <div class="form-group col-md-3">
+                                        <label for="inputCity">Task Name :</label>
+                                        <input type="text" class="form-control" id="inputCity">
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="inputState">Priority : </label>
+                                        <select id="inputState" class="form-control">
+                                            <option selected>High Priority</option>
+                                            <option>Medium Priority</option>
+                                            <option>Medium Priority</option>>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group col-md-2">
+                                        <label for="inputZip">Zip</label>
+                                        <input type="text" class="form-control" id="inputZip">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="gridCheck">
+                                        <label class="form-check-label" for="gridCheck">
+                                            Check me out
+                                        </label>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Sign in</button>
+                            </form>
+
+                        </div>
+                        <div class="card-footer text-end p-3">
+                            <button class="me-2 btn btn-link">Cancel</button>
+                            <button class="btn btn-primary">Add Task</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End your project here-->
+
+    <!-- MDB -->
+    <script type="text/javascript" src="{% static 'js/mdb.min.js' %}"></script>
+    <!-- Custom scripts -->
+    <script type="text/javascript"></script>
+
+{% endblock body %}
