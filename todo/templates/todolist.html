@@ -20,20 +20,23 @@
             overflow-y: auto;
         }
 
-        .gradient-background {
-            background: linear-gradient(45deg, #8c72b8, #ff9d6c);
+        a.text-decoration-none {
+            text-decoration: none !important;
+            color: inherit !important;
         }
+
+
     </style>
 {% endblock head %}
 
 {% block body %}
     <!-- Start your project here-->
-    <section class="vh-100" style="background: linear-gradient(to right, #fd8c76, #fa7896);">
+    <section class="vh-100" style="{{ theme.style1 }}">
         <div class="container py-5 h-100">
             <div class="row d-flex justify-content-center align-items-center h-100">
                 <div class="col-md-12 col-xl-10">
 
-                    <div class="card" style="background: linear-gradient(to right, #fcb0a2, #ff9baf);">
+                    <div class="card" style="{{ theme.style2 }}">
                         <div class="card-header p-3 row">
                             <h3 class="mb-0 col"><i class="fas fa-tasks me-2"></i>TaskWise</h3>
                             <div class="text-end col">
@@ -61,8 +64,12 @@
                                     {% if not task.completed %}
                                         <tr class="fw-normal">
                                             <th>
-                                                <span class="ms-2 align-middle">{{ task.name }}</span>
+                                                <a href="{% url 'task' task.id %}" class="text-decoration-none">
+                                                    <span class="ms-2 align-middle">{{ task.name }}</span>
+                                                </a>
                                             </th>
+
+
                                             <td class="align-middle">
                                                 {% if task.priority == "High priority" %}
                                                     <h6 class="mb-0"><span
@@ -96,9 +103,22 @@
                             </table>
 
                         </div>
-                        <div class="card-footer text-end p-3">
-                            <button class="me-2 btn btn-link">Cancel</button>
-                            <button class="btn btn-primary">Add Task</button>
+                        <div class="card-footer p-2 row">
+                            <div class="form-group col-2">
+                                <form id="themeForm" method="post" action="{% url 'theme_update' %}">
+                                    {% csrf_token %}
+                                    <select id="inputTheme" class="form-control" name="inputTheme"
+                                            style="{{ theme.style2 }}">
+                                        <option {% if theme.scheme == 'DEFAULT' %}selected{% endif %}>DEFAULT</option>
+                                        <option {% if theme.scheme == 'OCEAN' %}selected{% endif %}>OCEAN</option>
+                                        <option {% if theme.scheme == 'FOREST' %}selected{% endif %}>FOREST</option>
+                                    </select>
+                                    <input type="submit" style="display: none;">
+                                </form>
+                            </div>
+                            <div class="text-end col">
+                                <button class="btn btn-primary">Add Task</button>
+                            </div>
                         </div>
                     </div>
 
@@ -108,10 +128,16 @@
     </section>
     <!-- End your project here-->
 
+    <-- Jquery -->
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
     <!-- MDB -->
     <script type="text/javascript" src="{% static 'js/mdb.min.js' %}"></script>
     <!-- Custom scripts -->
-    <script>
-    </script>
+    <script type="text/javascript" src="{% static 'js/theme.js' %}"></script>
+
+
 
 {% endblock body %}

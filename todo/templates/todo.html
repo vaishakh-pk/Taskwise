@@ -15,9 +15,15 @@
     <!-- MDB -->
     <link rel="stylesheet" href="{% static 'css/bootstrap-to-do-list.min.css' %}"/>
     {#--    CUSTOM  --#}
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.min.css">
+
     <style>
         .card-body {
             overflow-y: auto;
+            height: 400px;
         }
 
         .gradient-background {
@@ -28,54 +34,62 @@
 
 {% block body %}
     <!-- Start your project here-->
-    <section class="vh-100" style="background: linear-gradient(to right, #fd8c76, #fa7896);">
+    <section class="vh-100" style="{{ theme.style1 }}">
         <div class="container py-5 h-100">
             <div class="row d-flex justify-content-center align-items-center h-100">
                 <div class="col-md-12 col-xl-10">
 
-                    <div class="card" style="background: linear-gradient(to right, #fcb0a2, #ff9baf);">
+                    <div class="card" style="{{ theme.style2 }}">
                         <div class="card-header p-3">
                             <h5 class="mb-0"><i class="fas fa-tasks me-2"></i>TaskWise</h5>
                         </div>
-                        <div class="card-body" data-mdb-perfect-scrollbar="true"
-                             style="position: relative; height: 400px">
-
-                            <form>
-                                <div class="form-row">
-                                    <div class="form-group col-md-3">
-                                        <label for="inputCity">Task Name :</label>
-                                        <input type="text" class="form-control" id="inputCity">
-                                    </div>
-                                    <div class="form-group col-md-3">
-                                        <label for="inputState">Priority : </label>
-                                        <select id="inputState" class="form-control">
-                                            <option selected>High Priority</option>
-                                            <option>Medium Priority</option>
-                                            <option>Medium Priority</option>>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group col-md-2">
-                                        <label for="inputZip">Zip</label>
-                                        <input type="text" class="form-control" id="inputZip">
-                                    </div>
+                        <div class="card-body" data-mdb-perfect-scrollbar="true" style="position: relative;">
+                            <form method="POST" action="{% url 'task_update' task.id %}">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label for="inputTask">Task Name:</label>
+                                    <input type="text" class="form-control" id="inputTask" name="inputTask"
+                                           value="{{ task.name }}">
                                 </div>
                                 <div class="form-group">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="gridCheck">
-                                        <label class="form-check-label" for="gridCheck">
-                                            Check me out
-                                        </label>
+                                    <label for="inputPriority">Priority:</label>
+                                    <select id="inputPriority" class="form-control" name="inputPriority">
+                                        <option {% if task.priority == 'High priority' %}selected{% endif %}>High
+                                            priority
+                                        </option>
+                                        <option {% if task.priority == 'Medium priority' %}selected{% endif %}>Medium
+                                            priority
+                                        </option>
+                                        <option {% if task.priority == 'Low priority' %}selected{% endif %}>Low priority
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="datetimepicker1">Due Date:</label>
+                                    <div class="input-group date">
+                                        <input type="datetime-local" class="form-control" name="date" id="date"
+                                               value="{{ task.date|date:'Y-m-d\TH:i' }}" required>
+
+                                        </span>
                                     </div>
                                 </div>
-                                <button type="submit" class="btn btn-primary">Sign in</button>
-                            </form>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="status" name="status"
+                                           {% if task.completed %}checked{% endif %}>
+                                    <label class="form-check-label" for="status">
+                                        Completed
+                                    </label>
+                                </div>
+
 
                         </div>
                         <div class="card-footer text-end p-3">
-                            <button class="me-2 btn btn-link">Cancel</button>
-                            <button class="btn btn-primary">Add Task</button>
+                            <a href="{% url 'todolist' %}">
+                                <button class="me-2 btn btn-link">Cancel</button>
+                            </a>
+                            <button type="submit" class="btn btn-primary">Add Task</button>
                         </div>
+                        </form>
                     </div>
 
                 </div>
@@ -84,9 +98,7 @@
     </section>
     <!-- End your project here-->
 
-    <!-- MDB -->
-    <script type="text/javascript" src="{% static 'js/mdb.min.js' %}"></script>
-    <!-- Custom scripts -->
-    <script type="text/javascript"></script>
+    <!-- JavaScript libraries -->
+
 
 {% endblock body %}

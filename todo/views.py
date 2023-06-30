@@ -8,12 +8,16 @@ from django.http import JsonResponse
 
 from .forms import SignUpForm,SignInForm
 from .models import Task
-
+from .models import Theme
 
 def index(request):
     signup_form = SignUpForm()
     login_form = SignInForm()
     return render(request, 'index.html', {'signup_form': signup_form, 'login_form': login_form})
+
+
+from .models import Theme
+
 
 def signup_view(request):
     if request.method == 'POST':
@@ -22,7 +26,11 @@ def signup_view(request):
             name = form.cleaned_data['name']
             email = form.cleaned_data['email']
             password = form.cleaned_data['password']
-            User.objects.create_user(username=email, email=email, password=password, first_name=name)
+            user = User.objects.create_user(username=email, email=email, password=password, first_name=name)
+
+            # Create a Theme object for the user with the default scheme
+            theme = Theme.objects.create(user=user)
+
             messages.success(request, 'User created successfully!')
             return redirect('signin')
     else:
@@ -44,14 +52,42 @@ def signin_view(request):
     return redirect('index')  # Replace 'index' with the appropriate URL name for your index page
 
 
-def task_view(request):
-    return render(request, 'todo.html')
+def task_view(request, task_id):
+    task = get_object_or_404(Task, id=task_id)
+    theme = Theme.objects.get(user= request.user)
+
+    context ={
+        'task': task,
+        'theme': theme,
+    }
+    return render(request, 'todo.html', context)
+
+
+
+def task_update(request, task_id):
+    task = get_object_or_404(Task, id=task_id)
+    if request.method == "POST":
+        task.name = request.POST.get('inputTask')
+        task.priority = request.POST.get('inputPriority')
+        task.date = request.POST.get('date')
+        task.completed = request.POST.get('status') == 'on'
+        task.save()
+        return redirect('todolist')
+    return render(request, 'todo.html', {'task': task})
+
+
+
 
 
 @login_required
 def todolist_view(request):
     tasks = Task.objects.filter(user=request.user)
-    return render(request, 'todolist.html', {'tasks': tasks})
+    theme = Theme.objects.filter(user=request.user).first()
+    context = {
+        'tasks': tasks,
+        'theme': theme,
+    }
+    return render(request, 'todolist.html', context)
 
 
 def complete_task(request, task_id):
@@ -59,10 +95,12 @@ def complete_task(request, task_id):
     # Mark the task as completed (update the completed field to True)
     if not task.completed:
         task.completed = True
+        task.save()
+        return redirect('todolist')
     else:
         task.completed = False
-    task.save()
-    return redirect('todolist')
+        task.save()
+        return redirect('completed')
 
 def delete_task(request, task_id):
     task = get_object_or_404(Task, id=task_id)
@@ -72,7 +110,22 @@ def delete_task(request, task_id):
 
 def completed_list_view(request):
     tasks = Task.objects.filter(user=request.user,completed=True)
-    return render(request, 'completed_list.html', {'tasks': tasks})
+    theme = Theme.objects.get(user=request.user)
+    context = {
+        'tasks': tasks,
+        'theme': theme,
+    }
+    return render(request, 'completed_list.html', context)
+
+
+def theme_update(request):
+    theme = Theme.objects.get(user=request.user)
+    if request.method == "POST":
+        theme.scheme = request.POST.get('inputTheme')
+        theme.save()
+        return redirect('todolist')
+
+
 
 def logout_view(request):
     logout(request)
