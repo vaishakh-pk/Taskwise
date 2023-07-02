@@ -68,6 +68,7 @@ def task_update(request, task_id):
     task = get_object_or_404(Task, id=task_id)
     if request.method == "POST":
         task.name = request.POST.get('inputTask')
+        task.category = request.POST.get('inputCategory')
         task.priority = request.POST.get('inputPriority')
         task.date = request.POST.get('date')
         task.completed = request.POST.get('status') == 'on'
@@ -126,6 +127,20 @@ def theme_update(request):
         return redirect('todolist')
 
 
+def task_create(request):
+    if request.method == "POST":
+        name = request.POST.get('inputTask')
+        category = request.POST.get('inputCategory')
+        priority = request.POST.get('inputPriority')
+        date = request.POST.get('date')
+        status = request.POST.get('status') == 'on'
+        task = Task.objects.create(user=request.user, name=name, category=category, priority=priority, date=date, completed=status)
+        task.save()
+        return redirect('todolist')
+
+def task_new(request):
+    theme = Theme.objects.get(user=request.user)
+    return render(request,'create.html', {'theme': theme})
 
 def logout_view(request):
     logout(request)

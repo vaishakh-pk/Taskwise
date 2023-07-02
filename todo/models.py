@@ -9,8 +9,14 @@ class Task(models.Model):
         ('Low priority', 'Low priority'),
     ]
 
+    CATEGORIES = [
+        ('None', 'None'), ('Personal', 'Personal'), ('Health', 'Health'), ('Household', 'Household'), ('Work', 'Work'),
+        ('Hobby', 'Hobby')
+    ]
+
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
+    category = models.CharField(max_length=20, choices=CATEGORIES)
     priority = models.CharField(max_length=20, choices=PRIORITY_CHOICES)
     date = models.DateTimeField()
     created = models.DateTimeField(auto_now_add=True)
@@ -52,4 +58,3 @@ class Theme(models.Model):
     @property
     def style2(self):
         return self.STYLE_2.get(self.scheme, self.STYLE_2['DEFAULT'])
-

@@ -52,6 +52,19 @@
                                            value="{{ task.name }}">
                                 </div>
                                 <div class="form-group">
+                                    <label for="inputCategory">Category:</label>
+                                    <select id="inputCategory" class="form-control" name="inputCategory">
+                                        <option {% if task.category == 'None' %}selected{% endif %}>None</option>
+                                        <option {% if task.category == 'Personal' %}selected{% endif %}>Personal
+                                        </option>
+                                        <option {% if task.category == 'Health' %}selected{% endif %}>Health</option>
+                                        <option {% if task.category == 'Household' %}selected{% endif %}>Household
+                                        </option>
+                                        <option {% if task.category == 'Work' %}selected{% endif %}>Work</option>
+                                        <option {% if task.category == 'Hobby' %}selected{% endif %}>Hobby</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
                                     <label for="inputPriority">Priority:</label>
                                     <select id="inputPriority" class="form-control" name="inputPriority">
                                         <option {% if task.priority == 'High priority' %}selected{% endif %}>High
@@ -84,10 +97,8 @@
 
                         </div>
                         <div class="card-footer text-end p-3">
-                            <a href="{% url 'todolist' %}">
-                                <button class="me-2 btn btn-link">Cancel</button>
-                            </a>
-                            <button type="submit" class="btn btn-primary">Add Task</button>
+                            <a href="{% url 'todolist' %}" class="me-2 btn btn-link">Cancel</a>
+                            <button type="submit" class="btn btn-primary">Update</button>
                         </div>
                         </form>
                     </div>

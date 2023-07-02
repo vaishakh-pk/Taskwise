@@ -1,0 +1,116 @@
+{% load static %}
+
+{% block head %}
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta http-equiv="x-ua-compatible" content="ie=edge"/>
+    <title>TaskWise</title>
+    <!-- MDB icon -->
+    <link rel="icon" href="img/mdb-favicon.ico" type="image/x-icon"/>
+    <!-- Font Awesome -->
+    {#    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"/>#}
+    <!-- Google Fonts Roboto -->
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap"/>
+    <!-- MDB -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap-to-do-list.min.css' %}"/>
+    {#--    CUSTOM  --#}
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.min.css">
+
+    <style>
+        .card-body {
+            overflow-y: auto;
+            height: 400px;
+        }
+
+        .gradient-background {
+            background: linear-gradient(45deg, #8c72b8, #ff9d6c);
+        }
+    </style>
+{% endblock head %}
+
+{% block body %}
+    <!-- Start your project here-->
+    <section class="vh-100" style="{{ theme.style1 }}">
+        <div class="container py-5 h-100">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-md-12 col-xl-10">
+
+                    <div class="card" style="{{ theme.style2 }}">
+                        <div class="card-header p-3">
+                            <h5 class="mb-0"><i class="fas fa-tasks me-2"></i>TaskWise</h5>
+                        </div>
+                        <div class="card-body" data-mdb-perfect-scrollbar="true" style="position: relative;">
+                            <form method="POST" action="{% url 'task_create' %}">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label for="inputTask">Task Name:</label>
+                                    <input type="text" class="form-control" id="inputTask" name="inputTask"
+                                    >
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputCategory">Category:</label>
+                                    <select id="inputCategory" class="form-control" name="inputCategory">
+                                        <option>None</option>
+                                        <option>Personal</option>
+                                        <option>Health</option>
+                                        <option>Household</option>
+                                        <option>Work</option>
+                                        <option>Hobby</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputPriority">Priority:</label>
+                                    <select id="inputPriority" class="form-control" name="inputPriority">
+                                        <option selected>High
+                                            priority
+                                        </option>
+                                        <option>Medium
+                                            priority
+                                        </option>
+                                        <option>Low priority
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="datetimepicker1">Due Date:</label>
+                                    <div class="input-group date">
+                                        <input type="datetime-local" class="form-control" name="date" id="date"
+                                        >
+
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="status" name="status"
+                                    >
+                                    <label class="form-check-label" for="status">
+                                        Completed
+                                    </label>
+                                </div>
+
+
+                        </div>
+
+                        <div class="card-footer text-end p-3">
+                            <a href="{% url 'todolist' %}" class="me-2 btn btn-link">Cancel</a>
+                            <button type="submit" class="btn btn-primary">Add Task</button>
+                        </div>
+
+
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End your project here-->
+
+    <!-- JavaScript libraries -->
+
+
+{% endblock body %}
