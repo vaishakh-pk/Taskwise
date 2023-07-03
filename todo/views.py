@@ -2,13 +2,14 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import authenticate, login ,logout
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.http import JsonResponse
 
-from .forms import SignUpForm,SignInForm
+from .forms import SignUpForm, SignInForm
 from .models import Task
 from .models import Theme
+
 
 def index(request):
     signup_form = SignUpForm()
@@ -30,7 +31,6 @@ def signup_view(request):
 
             # Create a Theme object for the user with the default scheme
             theme = Theme.objects.create(user=user)
-
             messages.success(request, 'User created successfully!')
             return redirect('signin')
     else:
@@ -46,6 +46,9 @@ def signin_view(request):
         user = authenticate(request, username=email, password=password)
         if user is not None:
             login(request, user)
+            theme = Theme.objects.get(user=request.user)
+            theme.category = 'All'
+            theme.save()
             return redirect('todolist')  # Replace 'todolist' with the appropriate URL name for your todolist page
         else:
             messages.error(request, 'Invalid email or password')
@@ -54,14 +57,13 @@ def signin_view(request):
 
 def task_view(request, task_id):
     task = get_object_or_404(Task, id=task_id)
-    theme = Theme.objects.get(user= request.user)
+    theme = Theme.objects.get(user=request.user)
 
-    context ={
+    context = {
         'task': task,
         'theme': theme,
     }
     return render(request, 'todo.html', context)
-
 
 
 def task_update(request, task_id):
@@ -77,13 +79,13 @@ def task_update(request, task_id):
     return render(request, 'todo.html', {'task': task})
 
 
-
-
-
 @login_required
 def todolist_view(request):
-    tasks = Task.objects.filter(user=request.user)
     theme = Theme.objects.filter(user=request.user).first()
+    if theme.category == 'All':
+        tasks = Task.objects.filter(user=request.user)
+    else:
+        tasks = Task.objects.filter(user=request.user, category=theme.category)
     context = {
         'tasks': tasks,
         'theme': theme,
@@ -103,14 +105,16 @@ def complete_task(request, task_id):
         task.save()
         return redirect('completed')
 
+
 def delete_task(request, task_id):
     task = get_object_or_404(Task, id=task_id)
     # Delete the task
     task.delete()
     return redirect('todolist')
 
+
 def completed_list_view(request):
-    tasks = Task.objects.filter(user=request.user,completed=True)
+    tasks = Task.objects.filter(user=request.user, completed=True)
     theme = Theme.objects.get(user=request.user)
     context = {
         'tasks': tasks,
@@ -127,6 +131,14 @@ def theme_update(request):
         return redirect('todolist')
 
 
+def category_update(request):
+    theme = Theme.objects.get(user=request.user)
+    if request.method == "POST":
+        theme.category = request.POST.get('inputCategory')
+        theme.save()
+        return redirect('todolist')
+
+
 def task_create(request):
     if request.method == "POST":
         name = request.POST.get('inputTask')
@@ -134,15 +146,17 @@ def task_create(request):
         priority = request.POST.get('inputPriority')
         date = request.POST.get('date')
         status = request.POST.get('status') == 'on'
-        task = Task.objects.create(user=request.user, name=name, category=category, priority=priority, date=date, completed=status)
+        task = Task.objects.create(user=request.user, name=name, category=category, priority=priority, date=date,
+                                   completed=status)
         task.save()
         return redirect('todolist')
 
+
 def task_new(request):
     theme = Theme.objects.get(user=request.user)
-    return render(request,'create.html', {'theme': theme})
+    return render(request, 'create.html', {'theme': theme})
+
 
 def logout_view(request):
     logout(request)
     return redirect('index')
-

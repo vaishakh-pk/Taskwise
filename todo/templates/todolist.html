@@ -38,8 +38,30 @@
 
                     <div class="card" style="{{ theme.style2 }}">
                         <div class="card-header p-3 row">
-                            <h3 class="mb-0 col"><i class="fas fa-tasks me-2"></i>TaskWise</h3>
-                            <div class="text-end col">
+                            <h3 class="mb-0 col-sm-7"><i class="fas fa-tasks me-2"></i>TaskWise</h3>
+                            <div class="col-sm-2 text-end">
+    <div class="form-group text-center">
+        <form id="categoryForm" method="post" action="{% url 'category_update' %}">
+            {% csrf_token %}
+            <div class="dropdown">
+                <button class="btn btn-primary dropdown-toggle" type="button" id="inputCategoryDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="{{ theme.style1 }}">
+                    CATEGORY
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="inputCategoryDropdown">
+                    <li><button class="dropdown-item" type="submit" name="inputCategory" value="All">All</button></li>
+                    <li><button class="dropdown-item" type="submit" name="inputCategory" value="Personal">Personal</button></li>
+                    <li><button class="dropdown-item" type="submit" name="inputCategory" value="Work">Work</button></li>
+                    <li><button class="dropdown-item" type="submit" name="inputCategory" value="Health">Health</button></li>
+                    <li><button class="dropdown-item" type="submit" name="inputCategory" value="Household">Household</button></li>
+                    <li><button class="dropdown-item" type="submit" name="inputCategory" value="Hobby">Hobby</button></li>
+                </ul>
+            </div>
+            <input type="submit" style="display: none;">
+        </form>
+    </div>
+</div>
+
+                            <div class="text-end col-sm-3">
                                 <a href="{% url 'completed' %}" class=" btn btn-secondary">Completed</a>
                                 </a>
                                 <a href="{% url 'logout' %}" class="btn btn-danger">Log Out</a>
@@ -105,17 +127,24 @@
                         </div>
                         <div class="card-footer p-2 row">
                             <div class="form-group col-2">
-                                <form id="themeForm" method="post" action="{% url 'theme_update' %}">
-                                    {% csrf_token %}
-                                    <select id="inputTheme" class="form-control" name="inputTheme"
-                                            style="{{ theme.style2 }}">
-                                        <option {% if theme.scheme == 'DEFAULT' %}selected{% endif %}>DEFAULT</option>
-                                        <option {% if theme.scheme == 'OCEAN' %}selected{% endif %}>OCEAN</option>
-                                        <option {% if theme.scheme == 'FOREST' %}selected{% endif %}>FOREST</option>
-                                    </select>
-                                    <input type="submit" style="display: none;">
-                                </form>
-                            </div>
+    <form id="themeForm" method="post" action="{% url 'theme_update' %}">
+        {% csrf_token %}
+        <div class="dropdown"> 
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="inputThemeDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="{{ theme.style1 }}">
+                {{ theme.scheme }}
+               </button>
+            <ul class="dropdown-menu" aria-labelledby="inputThemeDropdown">
+                <li><button class="dropdown-item" type="submit" name="inputTheme" value="DEFAULT">DEFAULT</button></li>
+                <li><button class="dropdown-item" type="submit" name="inputTheme" value="OCEAN">OCEAN</button></li>
+                <li><button class="dropdown-item" type="submit" name="inputTheme" value="FOREST">FOREST</button></li>
+                <li><button class="dropdown-item" type="submit" name="inputTheme" value="LIGHT">LIGHT</button></li>
+                <li><button class="dropdown-item" type="submit" name="inputTheme" value="DARK">DARK</button></li>
+            </ul>
+        </div>
+        <input type="submit" style="display: none;">
+    </form>
+</div>
+
                             <div class="text-end col">
                                 <a href="{% url 'task_new' %}">
                                     <button class="btn btn-primary">Add Task</button>
@@ -138,7 +167,9 @@
     <!-- MDB -->
     <script type="text/javascript" src="{% static 'js/mdb.min.js' %}"></script>
     <!-- Custom scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="{% static 'js/theme.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/category.js' %}"></script>
 
 
 
