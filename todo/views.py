@@ -1,11 +1,14 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.core.mail import EmailMessage
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.http import JsonResponse
+from django.template.loader import render_to_string
 
+from todo_list import settings
 from .forms import SignUpForm, SignInForm
 from .models import Task
 from .models import Theme
@@ -27,7 +30,26 @@ def signup_view(request):
             name = form.cleaned_data['name']
             email = form.cleaned_data['email']
             password = form.cleaned_data['password']
-            user = User.objects.create_user(username=email, email=email, password=password, first_name=name)
+
+            if User.objects.filter(first_name=name).exists():
+                messages.success(request, 'Huff ,Username already exist')
+                return redirect("signin")
+            elif User.objects.filter(email=email).exists():
+                messages.info(request, 'Come On, Email was already Taken !')
+                return redirect("signin")
+            else:
+                user = User.objects.create_user(username=email, email=email, password=password, first_name=name)
+                user.save()
+                mydict = {'username': name}
+                html_template = 'registered_mail.html'
+                html_message = render_to_string(html_template, context=mydict)
+                subject = 'Welcome to TaskWise'
+                email_from = settings.EMAIL_HOST_USER
+                recipient_list = [email]
+                message = EmailMessage(subject, html_message,
+                                       email_from, recipient_list)
+                message.content_subtype = 'html'
+                message.send()
 
             # Create a Theme object for the user with the default scheme
             theme = Theme.objects.create(user=user)
