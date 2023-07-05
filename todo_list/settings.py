@@ -144,7 +144,7 @@ CELERY_TASK_DEFAULT_ROUTING_KEY = 'default'
 CELERY_BEAT_SCHEDULE = {
     'send_task_notifications': {
         'task': 'todo.tasks.send_task_notifications',
-        'schedule': crontab(hour=11, minute=37),  # Schedule the task to run at midnight each day
+        'schedule': crontab(hour=21, minute=0),  # Schedule the task to run at midnight each day
     },
 }
 
