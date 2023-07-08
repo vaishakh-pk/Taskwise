@@ -14,7 +14,6 @@ from pathlib import Path
 
 
 from . import config
-from celery.schedules import crontab
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -133,22 +132,6 @@ STATICFILES_DIRS = [
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
-
-# EMAIL SCHEDULING
-
-# Celery Configuration
-CELERY_BROKER_URL = 'memory://localhost/'
-
-CELERY_TASK_DEFAULT_QUEUE = 'default'
-CELERY_TASK_DEFAULT_EXCHANGE = 'default'
-CELERY_TASK_DEFAULT_ROUTING_KEY = 'default'
-# Celery Beat Schedule
-CELERY_BEAT_SCHEDULE = {
-    'send_task_notifications': {
-        'task': 'todo.tasks.send_task_notifications',
-        'schedule': crontab(hour=21, minute=0),  # Schedule the task to run at midnight each day
-    },
-}
 
 
 
