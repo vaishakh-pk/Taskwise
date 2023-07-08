@@ -1,17 +1,14 @@
+from datetime import datetime
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.forms import AuthenticationForm
-from django.http import JsonResponse
 from django.template.loader import render_to_string
-
 from todo_list import settings
 from .forms import SignUpForm, SignInForm
 from .models import Task
-from .models import Theme
 
 
 def index(request):
@@ -96,6 +93,7 @@ def task_update(request, task_id):
         task.priority = request.POST.get('inputPriority')
         task.date = request.POST.get('date')
         task.completed = request.POST.get('status') == 'on'
+        task.notification = False
         task.save()
         return redirect('todolist')
     return render(request, 'todo.html', {'task': task})
@@ -171,7 +169,26 @@ def task_create(request):
         task = Task.objects.create(user=request.user, name=name, category=category, priority=priority, date=date,
                                    completed=status)
         task.save()
-        return redirect('todolist')
+        task_date = datetime.strptime(date, '%Y-%m-%dT%H:%M').date()
+        if task_date == datetime.now().date():
+            print("Sending email-notification..")
+            mydict = {
+                'username': task.user.first_name,
+                'task': task.name,
+                'time': datetime.strptime(date, '%Y-%m-%dT%H:%M').time()
+            }
+            html_message = render_to_string('email-notification.html', mydict)
+            subject = 'TaskWise reminder -' + task.name
+            email_from = settings.EMAIL_HOST_USER
+            recipient_list = [task.user]
+            message = EmailMessage(subject, html_message,
+                                   email_from, recipient_list)
+            message.content_subtype = 'html'
+            message.send()
+            task.notification = True
+            task.save()
+            print("Email sent successfully")
+            return redirect('todolist')
 
 
 def task_new(request):

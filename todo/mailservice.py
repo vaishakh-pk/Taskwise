@@ -19,7 +19,8 @@ def notifty():
             print(task)
             mydict = {
                 'username': task.user.first_name,
-                'task': task.name
+                'task': task.name,
+                'time': task.date.time()
             }
             html_template = 'email-notification.html'
             html_message = render_to_string(html_template, mydict)
@@ -47,3 +48,9 @@ time_remaining = (newday - datetime.datetime.now()).total_seconds()
 while True:
     notifty()
     time.sleep(time_remaining)
+
+
+
+
+
+
