@@ -15,7 +15,8 @@ class Task(models.Model):
     ]
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=100)
+    description = models.TextField(max_length=400, blank=True,default="")
     category = models.CharField(max_length=20, choices=CATEGORIES)
     priority = models.CharField(max_length=20, choices=PRIORITY_CHOICES)
     date = models.DateTimeField()
