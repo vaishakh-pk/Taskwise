@@ -169,26 +169,26 @@ def task_create(request):
         task = Task.objects.create(user=request.user, name=name, category=category, priority=priority, date=date,
                                    completed=status)
         task.save()
-        task_date = datetime.strptime(date, '%Y-%m-%dT%H:%M').date()
-        if task_date == datetime.now().date():
-            print("Sending email-notification..")
-            mydict = {
-                'username': task.user.first_name,
-                'task': task.name,
-                'time': datetime.strptime(date, '%Y-%m-%dT%H:%M').time()
-            }
-            html_message = render_to_string('email-notification.html', mydict)
-            subject = 'TaskWise reminder -' + task.name
-            email_from = settings.EMAIL_HOST_USER
-            recipient_list = [task.user]
-            message = EmailMessage(subject, html_message,
-                                   email_from, recipient_list)
-            message.content_subtype = 'html'
-            message.send()
-            task.notification = True
-            task.save()
-            print("Email sent successfully")
-            return redirect('todolist')
+        # task_date = datetime.strptime(date, '%Y-%m-%dT%H:%M').date()
+        # if task_date == datetime.now().date():
+        #     print("Sending email-notification..")
+        #     mydict = {
+        #         'username': task.user.first_name,
+        #         'task': task.name,
+        #         'time': datetime.strptime(date, '%Y-%m-%dT%H:%M').time()
+        #     }
+        #     html_message = render_to_string('email-notification.html', mydict)
+        #     subject = 'TaskWise reminder -' + task.name
+        #     email_from = settings.EMAIL_HOST_USER
+        #     recipient_list = [task.user]
+        #     message = EmailMessage(subject, html_message,
+        #                            email_from, recipient_list)
+        #     message.content_subtype = 'html'
+        #     message.send()
+        #     task.notification = True
+        #     task.save()
+        #     print("Email sent successfully")
+        return redirect('todolist')
 
 
 def task_new(request):
